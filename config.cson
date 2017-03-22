@@ -1,0 +1,24 @@
+"*":
+  "Sublime-Style-Column-Selection":
+    mouseButtonTrigger: "Middle"
+    selectKeyTrigger: "None"
+  core:
+    telemetryConsent: "limited"
+  editor:
+    softTabs: false
+    tabType: "hard"
+  "exception-reporting":
+    userId: "1f2ad024-9c7e-41a4-b974-be4b66997372"
+  "file-icons":
+    strategies: {}
+  fonts: {}
+  "language-babel":
+    autoIndentJSX: true
+  "markdown-preview-plus": {}
+  minimap:
+    plugins:
+      pigments: true
+      pigmentsDecorationsZIndex: 0
+  "tree-view": {}
+  welcome:
+    showOnStartup: false
