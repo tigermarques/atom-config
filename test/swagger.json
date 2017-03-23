@@ -18,9 +18,32 @@
   }, {
     "name" : "developers",
     "description" : "Operations available to regular developers"
+  }, {
+    "name" : "tasks",
+    "description" : "Task related operations"
   } ],
   "schemes" : [ "https" ],
   "paths" : {
+    "/tasks" : {
+      "get" : {
+        "tags" : [ "tasks" ],
+        "summary" : "get all tasks",
+        "operationId" : "getAllTasks",
+        "description" : "Retrieves all tasks for the currently signed in user\n",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "tasks for the logged in user",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/"
+              }
+            }
+          }
+        }
+      }
+    },
     "/inventory" : {
       "get" : {
         "tags" : [ "developers" ],
@@ -95,6 +118,20 @@
     }
   },
   "definitions" : {
+    "TaskItem" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string",
+          "format" : "int32",
+          "example" : 3445
+        },
+        "subject" : {
+          "type" : "string",
+          "example" : "Task 1"
+        }
+      }
+    },
     "InventoryItem" : {
       "type" : "object",
       "required" : [ "id", "name", "manufacturer", "releaseDate" ],
@@ -138,5 +175,5 @@
     }
   },
   "host" : "virtserver.swaggerhub.com",
-  "basePath" : "/tigermarques/Knuckles/1.0.0"
+  "basePath" : "/api"
 }
