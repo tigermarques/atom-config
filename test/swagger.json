@@ -104,7 +104,7 @@
         }
       }
     },
-    "/task" : {
+    "/task/{id}" : {
       "get" : {
         "tags" : [ "tasks" ],
         "summary" : "get specific task by id",
@@ -122,7 +122,6 @@
           "200" : {
             "description" : "tasks for the logged in user",
             "schema" : {
-              "type" : "object",
               "$ref" : "#/definitions/Task"
             }
           }
