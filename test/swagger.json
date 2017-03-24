@@ -1,16 +1,9 @@
 {
   "swagger" : "2.0",
   "info" : {
-    "description" : "This is a simple API",
+    "description" : "Knuckles REST API",
     "version" : "1.0.0",
-    "title" : "Simple Inventory API",
-    "contact" : {
-      "email" : "you@your-company.com"
-    },
-    "license" : {
-      "name" : "Apache 2.0",
-      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
-    }
+    "title" : "Simple Inventory API"
   },
   "tags" : [ {
     "name" : "admins",
@@ -25,7 +18,7 @@
     "name" : "auth",
     "description" : "Authentication related operations"
   } ],
-  "schemes" : [ "https" ],
+  "schemes" : [ "https", "http" ],
   "paths" : {
     "/login" : {
       "post" : {
@@ -110,6 +103,55 @@
         "summary" : "get specific task by id",
         "operationId" : "getTaskById",
         "description" : "Retrieves the details for a specific task\n",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "description" : "task ID",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "tasks for the logged in user",
+            "schema" : {
+              "$ref" : "#/definitions/Task"
+            }
+          }
+        }
+      }
+    },
+    "/task/{id}/claim" : {
+      "get" : {
+        "tags" : [ "tasks" ],
+        "summary" : "claims a specific task",
+        "operationId" : "claimTaskById",
+        "description" : "Claims a specific task for the current user and retrieves its details\n",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "description" : "task ID",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "tasks for the logged in user",
+            "schema" : {
+              "$ref" : "#/definitions/Task"
+            }
+          }
+        }
+      }
+    },
+    "/task/{id}/complete" : {
+      "put" : {
+        "consumes" : [ "application/x-www-form-urlencoded" ],
+        "tags" : [ "tasks" ],
+        "summary" : "finishes a task",
+        "operationId" : "completeTask",
+        "description" : "Marks a task as finished, providing the data that the BPM system expects\n",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "in" : "path",
