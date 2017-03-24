@@ -97,8 +97,33 @@
             "schema" : {
               "type" : "array",
               "items" : {
-                "$ref" : "#/definitions/TaskItem"
+                "$ref" : "#/definitions/Task"
               }
+            }
+          }
+        }
+      }
+    },
+    "/task" : {
+      "get" : {
+        "tags" : [ "tasks" ],
+        "summary" : "get specific task by id",
+        "operationId" : "getTaskById",
+        "description" : "Retrieves the details for a specific task\n",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "description" : "task ID",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "tasks for the logged in user",
+            "schema" : {
+              "type" : "object",
+              "$ref" : "#/definitions/Task"
             }
           }
         }
@@ -178,7 +203,7 @@
     }
   },
   "definitions" : {
-    "TaskItem" : {
+    "Task" : {
       "type" : "object",
       "properties" : {
         "id" : {
