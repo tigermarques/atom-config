@@ -21,9 +21,46 @@
   }, {
     "name" : "tasks",
     "description" : "Task related operations"
+  }, {
+    "name" : "auth",
+    "description" : "Authentication related operations"
   } ],
   "schemes" : [ "https" ],
   "paths" : {
+    "/login" : {
+      "post" : {
+        "consumes" : [ "application/x-www-form-urlencoded" ],
+        "tags" : [ "auth" ],
+        "summary" : "user login",
+        "operationId" : "userLogin",
+        "description" : "Allows a user to login to the portal (and to the BPM server)",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "formData",
+          "name" : "username",
+          "description" : "username",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "formData",
+          "name" : "password",
+          "description" : "password",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful login"
+          },
+          "400" : {
+            "description" : "username or password not supplied"
+          },
+          "401" : {
+            "description" : "incorrect username or password"
+          }
+        }
+      }
+    },
     "/tasks" : {
       "get" : {
         "tags" : [ "tasks" ],
