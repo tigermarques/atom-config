@@ -70,6 +70,20 @@
         }
       }
     },
+    "/logout" : {
+      "get" : {
+        "tags" : [ "auth" ],
+        "summary" : "user logout",
+        "operationId" : "userLogout",
+        "description" : "Allows a user to logout from the portal (and from the BPM server)",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful logout"
+          }
+        }
+      }
+    },
     "/tasks" : {
       "get" : {
         "tags" : [ "tasks" ],
