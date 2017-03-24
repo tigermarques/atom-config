@@ -50,7 +50,16 @@
         } ],
         "responses" : {
           "200" : {
-            "description" : "successful login"
+            "description" : "successful login",
+            "schema" : {
+              "type" : "object",
+              "properties" : {
+                "token" : {
+                  "type" : "string",
+                  "example" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWV9.TJVA95OrM7E2cBab30RMHrHDcEfxjoYZgeFONFh7HgQ"
+                }
+              }
+            }
           },
           "400" : {
             "description" : "username or password not supplied"
