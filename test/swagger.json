@@ -272,7 +272,7 @@
     "TaskSummary" : {
       "type" : "object",
       "properties" : {
-        "taskId" : {
+        "id" : {
           "type" : "string",
           "format" : "int32",
           "example" : 76503
@@ -282,31 +282,14 @@
           "example" : "READY",
           "enum" : [ "READY", "CLAIMED", "FINISHED" ]
         },
-        "processId" : {
-          "type" : "string",
-          "format" : "int32",
-          "example" : 12123
-        },
-        "instanceName" : {
-          "type" : "string",
-          "example" : "My Process:1"
-        },
-        "instanceDisplayName" : {
-          "type" : "string",
-          "example" : "My Process:1"
-        },
-        "taskName" : {
-          "type" : "string",
-          "example" : "My Task"
-        },
-        "taskDisplayName" : {
+        "subject" : {
           "type" : "string",
           "example" : "My Task"
         },
         "priority" : {
           "type" : "string",
           "example" : "HIGH",
-          "enum" : [ "HIGH", "LOW", "MEDIUM" ]
+          "enum" : [ "VERY_HIGH", "HIGH", "MEDIUM", "LOW", "VERY_LOW" ]
         },
         "dueDate" : {
           "type" : "string",
@@ -320,6 +303,19 @@
         "assignedTo" : {
           "type" : "string",
           "example" : "user1"
+        },
+        "activityName" : {
+          "type" : "string",
+          "example" : "My Task"
+        },
+        "instanceId" : {
+          "type" : "string",
+          "format" : "int32",
+          "example" : 12123
+        },
+        "instanceName" : {
+          "type" : "string",
+          "example" : "My Process:1"
         }
       }
     },
