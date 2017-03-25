@@ -90,7 +90,7 @@
             "schema" : {
               "type" : "array",
               "items" : {
-                "$ref" : "#/definitions/Task"
+                "$ref" : "#/definitions/TaskSummary"
               }
             }
           }
@@ -115,14 +115,14 @@
           "200" : {
             "description" : "tasks for the logged in user",
             "schema" : {
-              "$ref" : "#/definitions/Task"
+              "$ref" : "#/definitions/TaskSummary"
             }
           }
         }
       }
     },
     "/task/{id}/claim" : {
-      "get" : {
+      "put" : {
         "tags" : [ "tasks" ],
         "summary" : "claims a specific task",
         "operationId" : "claimTaskById",
@@ -139,7 +139,7 @@
           "200" : {
             "description" : "tasks for the logged in user",
             "schema" : {
-              "$ref" : "#/definitions/Task"
+              "$ref" : "#/definitions/TaskSummary"
             }
           }
         }
@@ -164,7 +164,32 @@
           "200" : {
             "description" : "tasks for the logged in user",
             "schema" : {
-              "$ref" : "#/definitions/Task"
+              "$ref" : "#/definitions/TaskSummary"
+            }
+          }
+        }
+      }
+    },
+    "/task/{id}/save" : {
+      "put" : {
+        "consumes" : [ "application/x-www-form-urlencoded" ],
+        "tags" : [ "tasks" ],
+        "summary" : "finishes a task",
+        "operationId" : "saveTaskState",
+        "description" : "Marks a task as finished, providing the data that the BPM system expects\n",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "description" : "task ID",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "tasks for the logged in user",
+            "schema" : {
+              "$ref" : "#/definitions/TaskSummary"
             }
           }
         }
@@ -244,17 +269,57 @@
     }
   },
   "definitions" : {
-    "Task" : {
+    "TaskSummary" : {
       "type" : "object",
       "properties" : {
-        "id" : {
+        "taskId" : {
           "type" : "string",
           "format" : "int32",
-          "example" : 3445
+          "example" : 76503
         },
-        "subject" : {
+        "state" : {
           "type" : "string",
-          "example" : "Task 1"
+          "example" : "READY",
+          "enum" : [ "READY", "CLAIMED", "FINISHED" ]
+        },
+        "processId" : {
+          "type" : "string",
+          "format" : "int32",
+          "example" : 12123
+        },
+        "instanceName" : {
+          "type" : "string",
+          "example" : "My Process:1"
+        },
+        "instanceDisplayName" : {
+          "type" : "string",
+          "example" : "My Process:1"
+        },
+        "taskName" : {
+          "type" : "string",
+          "example" : "My Task"
+        },
+        "taskDisplayName" : {
+          "type" : "string",
+          "example" : "My Task"
+        },
+        "priority" : {
+          "type" : "string",
+          "example" : "HIGH",
+          "enum" : [ "HIGH", "LOW", "MEDIUM" ]
+        },
+        "dueDate" : {
+          "type" : "string",
+          "format" : "date-time",
+          "example" : "2016-08-29T09:12:33.001Z"
+        },
+        "isAtRisk" : {
+          "type" : "boolean",
+          "example" : false
+        },
+        "assignedTo" : {
+          "type" : "string",
+          "example" : "user1"
         }
       }
     },
