@@ -181,7 +181,7 @@
           "200" : {
             "description" : "Task claimed",
             "schema" : {
-              "$ref" : "#/definitions/TaskClaimResponse"
+              "$ref" : "#/definitions/TaskBasicResponse"
             }
           },
           "401" : {
@@ -229,7 +229,7 @@
           "200" : {
             "description" : "Task cancelled",
             "schema" : {
-              "$ref" : "#/definitions/TaskClaimResponse"
+              "$ref" : "#/definitions/TaskBasicResponse"
             }
           },
           "401" : {
@@ -278,7 +278,7 @@
           "200" : {
             "description" : "tasks for the logged in user",
             "schema" : {
-              "$ref" : "#/definitions/TaskDetailResponse"
+              "$ref" : "#/definitions/TaskBasicResponse"
             }
           },
           "400" : {
@@ -339,7 +339,7 @@
           "200" : {
             "description" : "the new task data",
             "schema" : {
-              "$ref" : "#/definitions/TaskDataResponse"
+              "$ref" : "#/definitions/TaskBasicResponse"
             }
           },
           "400" : {
@@ -422,7 +422,7 @@
       "example" : "INACTIVE",
       "enum" : [ "CLAIMED", "FINISHED", "INACTIVE", "RUNNING", "SUSPENDED", "TERMINATED" ]
     },
-    "TaskClaimResponse" : {
+    "TaskBasicResponse" : {
       "allOf" : [ {
         "$ref" : "#/definitions/BaseResponse"
       }, {
