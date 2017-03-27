@@ -118,9 +118,9 @@
     "/tasks/{id}" : {
       "get" : {
         "tags" : [ "tasks" ],
-        "summary" : "get specific task by id",
+        "summary" : "gets a task by id",
         "operationId" : "getTaskById",
-        "description" : "Retrieves the details for a specific task\n",
+        "description" : "Retrieves the details for a specific task",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "in" : "path",
@@ -131,15 +131,9 @@
         } ],
         "responses" : {
           "200" : {
-            "description" : "tasks for the logged in user",
+            "description" : "Tasks for the logged in user",
             "schema" : {
               "$ref" : "#/definitions/TaskDetail"
-            }
-          },
-          "400" : {
-            "description" : "The parameters are not valid or are missing",
-            "schema" : {
-              "$ref" : "#/definitions/Error"
             }
           },
           "401" : {
@@ -172,9 +166,9 @@
     "/tasks/{id}/claim" : {
       "put" : {
         "tags" : [ "tasks" ],
-        "summary" : "claims a specific task",
+        "summary" : "claims a task",
         "operationId" : "claimTaskById",
-        "description" : "Claims a specific task for the current user and retrieves its details\n",
+        "description" : "Claims a specific task for the current user and retrieves its details",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "in" : "path",
@@ -185,21 +179,44 @@
         } ],
         "responses" : {
           "200" : {
-            "description" : "tasks for the logged in user",
+            "description" : "Task claimed",
             "schema" : {
-              "$ref" : "#/definitions/TaskSummary"
+              "$ref" : "#/definitions/TaskClaimResult"
+            }
+          },
+          "401" : {
+            "description" : "The user is not authorized to claim this task",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "404" : {
+            "description" : "The task does not exist",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "406" : {
+            "description" : "The requested content type or content encoding is not supported",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "500" : {
+            "description" : "An internal error occured",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
             }
           }
         }
       }
     },
-    "/tasks/{id}/complete" : {
+    "/tasks/{id}/cancel" : {
       "put" : {
-        "consumes" : [ "application/x-www-form-urlencoded" ],
         "tags" : [ "tasks" ],
-        "summary" : "finishes a task",
-        "operationId" : "completeTask",
-        "description" : "Marks a task as finished, providing the data that the BPM system expects\n",
+        "summary" : "cancels a task",
+        "operationId" : "cancelTaskById",
+        "description" : "Cancels a specific task, resetting its assigment to the original value",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "in" : "path",
@@ -210,9 +227,88 @@
         } ],
         "responses" : {
           "200" : {
+            "description" : "Task cancelled",
+            "schema" : {
+              "$ref" : "#/definitions/TaskClaimResult"
+            }
+          },
+          "401" : {
+            "description" : "The user is not authorized to claim this task",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "404" : {
+            "description" : "The task does not exist",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "500" : {
+            "description" : "An internal error occured",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/tasks/{id}/finish" : {
+      "put" : {
+        "consumes" : [ "application/x-www-form-urlencoded" ],
+        "tags" : [ "tasks" ],
+        "summary" : "finishes a task",
+        "operationId" : "completeTask",
+        "description" : "Marks a task as finished, providing the data that the BPM system expects",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "in" : "path",
+          "name" : "id",
+          "description" : "task ID",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "in" : "formData",
+          "name" : "data",
+          "description" : "task data (stringified)",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
             "description" : "tasks for the logged in user",
             "schema" : {
-              "$ref" : "#/definitions/TaskSummary"
+              "$ref" : "#/definitions/TaskDetail"
+            }
+          },
+          "400" : {
+            "description" : "The parameters are not valid",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "401" : {
+            "description" : "The user is not authorized to complete this task",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "404" : {
+            "description" : "The task does not exist",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "406" : {
+            "description" : "The requested content type or content encoding is not supported",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "500" : {
+            "description" : "An internal error occured",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
             }
           }
         }
@@ -224,7 +320,7 @@
         "tags" : [ "tasks" ],
         "summary" : "finishes a task",
         "operationId" : "saveTaskState",
-        "description" : "Marks a task as finished, providing the data that the BPM system expects\n",
+        "description" : "Changes the task data according to the new data provided",
         "produces" : [ "application/json" ],
         "parameters" : [ {
           "in" : "path",
@@ -232,85 +328,49 @@
           "description" : "task ID",
           "required" : true,
           "type" : "string"
-        } ],
-        "responses" : {
-          "200" : {
-            "description" : "tasks for the logged in user",
-            "schema" : {
-              "$ref" : "#/definitions/TaskSummary"
-            }
-          }
-        }
-      }
-    },
-    "/inventory" : {
-      "get" : {
-        "tags" : [ "developers" ],
-        "summary" : "searches inventory",
-        "operationId" : "searchInventory",
-        "description" : "By passing in the appropriate options, you can search for\navailable inventory in the system\n",
-        "produces" : [ "application/json" ],
-        "parameters" : [ {
-          "in" : "query",
-          "name" : "searchString",
-          "description" : "pass an optional search string for looking up inventory",
-          "required" : false,
+        }, {
+          "in" : "formData",
+          "name" : "data",
+          "description" : "task data (stringified)",
+          "required" : true,
           "type" : "string"
-        }, {
-          "in" : "query",
-          "name" : "skip",
-          "description" : "number of records to skip for pagination",
-          "type" : "integer",
-          "format" : "int32",
-          "minimum" : 0
-        }, {
-          "in" : "query",
-          "name" : "limit",
-          "description" : "maximum number of records to return",
-          "type" : "integer",
-          "format" : "int32",
-          "minimum" : 0,
-          "maximum" : 50
         } ],
         "responses" : {
           "200" : {
-            "description" : "search results matching criteria",
+            "description" : "the new task data",
             "schema" : {
-              "type" : "array",
-              "items" : {
-                "$ref" : "#/definitions/TaskSummary"
-              }
+              "$ref" : "#/definitions/TaskData"
             }
           },
           "400" : {
-            "description" : "bad input parameter"
-          }
-        }
-      },
-      "post" : {
-        "tags" : [ "admins" ],
-        "summary" : "adds an inventory item",
-        "operationId" : "addInventory",
-        "description" : "Adds an item to the system",
-        "consumes" : [ "application/json" ],
-        "produces" : [ "application/json" ],
-        "parameters" : [ {
-          "in" : "body",
-          "name" : "inventoryItem",
-          "description" : "Inventory item to add",
-          "schema" : {
-            "$ref" : "#/definitions/TaskSummary"
-          }
-        } ],
-        "responses" : {
-          "201" : {
-            "description" : "item created"
+            "description" : "The parameters are not valid",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
           },
-          "400" : {
-            "description" : "invalid input, object invalid"
+          "401" : {
+            "description" : "The user is not authorized to set data for this task",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
           },
-          "409" : {
-            "description" : "an existing item already exists"
+          "404" : {
+            "description" : "The task does not exist",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "406" : {
+            "description" : "The requested content type or content encoding is not supported",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "500" : {
+            "description" : "An internal error occured",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
           }
         }
       }
@@ -361,6 +421,32 @@
       "type" : "string",
       "example" : "INACTIVE",
       "enum" : [ "CLAIMED", "FINISHED", "INACTIVE", "RUNNING", "SUSPENDED", "TERMINATED" ]
+    },
+    "TaskClaimResult" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/BaseResponse"
+      }, {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "int32",
+            "example" : 76503
+          }
+        }
+      } ]
+    },
+    "TaskData" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/BaseResponse"
+      }, {
+        "type" : "object",
+        "properties" : {
+          "data" : {
+            "type" : "object"
+          }
+        }
+      } ]
     },
     "TaskSummary" : {
       "allOf" : [ {
