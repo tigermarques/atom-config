@@ -82,7 +82,7 @@
         "tags" : [ "tasks" ],
         "summary" : "get all tasks",
         "operationId" : "getAllTasks",
-        "description" : "Retrieves all tasks for the currently signed in user\n",
+        "description" : "Retrieves all tasks for the currently signed in user",
         "produces" : [ "application/json" ],
         "responses" : {
           "200" : {
@@ -93,11 +93,29 @@
                 "$ref" : "#/definitions/TaskSummary"
               }
             }
+          },
+          "401" : {
+            "description" : "The user is not authorized to get tasks",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "406" : {
+            "description" : "The requested content type or content encoding is not supported",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "500" : {
+            "description" : "An internal error occured",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
           }
         }
       }
     },
-    "/task/{id}" : {
+    "/tasks/{id}" : {
       "get" : {
         "tags" : [ "tasks" ],
         "summary" : "get specific task by id",
@@ -115,13 +133,43 @@
           "200" : {
             "description" : "tasks for the logged in user",
             "schema" : {
-              "$ref" : "#/definitions/TaskSummary"
+              "$ref" : "#/definitions/TaskDetail"
+            }
+          },
+          "400" : {
+            "description" : "The parameters are not valid or are missing",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "401" : {
+            "description" : "The user is not authorized to get this task details",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "404" : {
+            "description" : "The task does not exist",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "406" : {
+            "description" : "The requested content type or content encoding is not supported",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
+            }
+          },
+          "500" : {
+            "description" : "An internal error occured",
+            "schema" : {
+              "$ref" : "#/definitions/Error"
             }
           }
         }
       }
     },
-    "/task/{id}/claim" : {
+    "/tasks/{id}/claim" : {
       "put" : {
         "tags" : [ "tasks" ],
         "summary" : "claims a specific task",
@@ -145,7 +193,7 @@
         }
       }
     },
-    "/task/{id}/complete" : {
+    "/tasks/{id}/complete" : {
       "put" : {
         "consumes" : [ "application/x-www-form-urlencoded" ],
         "tags" : [ "tasks" ],
@@ -170,7 +218,7 @@
         }
       }
     },
-    "/task/{id}/save" : {
+    "/tasks/{id}/save" : {
       "put" : {
         "consumes" : [ "application/x-www-form-urlencoded" ],
         "tags" : [ "tasks" ],
@@ -230,7 +278,7 @@
             "schema" : {
               "type" : "array",
               "items" : {
-                "$ref" : "#/definitions/InventoryItem"
+                "$ref" : "#/definitions/TaskSummary"
               }
             }
           },
@@ -251,7 +299,7 @@
           "name" : "inventoryItem",
           "description" : "Inventory item to add",
           "schema" : {
-            "$ref" : "#/definitions/InventoryItem"
+            "$ref" : "#/definitions/TaskSummary"
           }
         } ],
         "responses" : {
@@ -269,96 +317,209 @@
     }
   },
   "definitions" : {
+    "BaseResponse" : {
+      "type" : "object",
+      "required" : [ "status" ],
+      "properties" : {
+        "status" : {
+          "type" : "string",
+          "example" : 200,
+          "minimum" : 100,
+          "maximum" : 600
+        }
+      }
+    },
+    "Error" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/BaseResponse"
+      }, {
+        "type" : "object",
+        "properties" : {
+          "errorType" : {
+            "type" : "string"
+          },
+          "errorMessage" : {
+            "type" : "string"
+          },
+          "details" : {
+            "type" : "object"
+          }
+        }
+      } ]
+    },
+    "TaskPriorityValue" : {
+      "type" : "string",
+      "example" : "HIGH",
+      "enum" : [ "VERY_HIGH", "HIGH", "MEDIUM", "LOW", "VERY_LOW" ]
+    },
+    "TaskPriorityDescription" : {
+      "type" : "string",
+      "example" : "High",
+      "enum" : [ "Very High", "High", "Medium", "Low", "Very Low" ]
+    },
+    "TaskState" : {
+      "type" : "string",
+      "example" : "INACTIVE",
+      "enum" : [ "CLAIMED", "FINISHED", "INACTIVE", "RUNNING", "SUSPENDED", "TERMINATED" ]
+    },
     "TaskSummary" : {
-      "type" : "object",
-      "properties" : {
-        "id" : {
-          "type" : "string",
-          "format" : "int32",
-          "example" : 76503
-        },
-        "state" : {
-          "type" : "string",
-          "example" : "READY",
-          "enum" : [ "READY", "CLAIMED", "FINISHED" ]
-        },
-        "subject" : {
-          "type" : "string",
-          "example" : "My Task"
-        },
-        "priority" : {
-          "type" : "string",
-          "example" : "HIGH",
-          "enum" : [ "VERY_HIGH", "HIGH", "MEDIUM", "LOW", "VERY_LOW" ]
-        },
-        "dueDate" : {
-          "type" : "string",
-          "format" : "date-time",
-          "example" : "2016-08-29T09:12:33.001Z"
-        },
-        "isAtRisk" : {
-          "type" : "boolean",
-          "example" : false
-        },
-        "assignedTo" : {
-          "type" : "string",
-          "example" : "user1"
-        },
-        "activityName" : {
-          "type" : "string",
-          "example" : "My Task"
-        },
-        "instanceId" : {
-          "type" : "string",
-          "format" : "int32",
-          "example" : 12123
-        },
-        "instanceName" : {
-          "type" : "string",
-          "example" : "My Process:1"
+      "allOf" : [ {
+        "$ref" : "#/definitions/BaseResponse"
+      }, {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "int32",
+            "example" : 76503
+          },
+          "state" : {
+            "$ref" : "#/definitions/TaskState"
+          },
+          "taskStatus" : {
+            "type" : "string",
+            "example" : "Received"
+          },
+          "subject" : {
+            "type" : "string",
+            "example" : "My Task"
+          },
+          "priority" : {
+            "$ref" : "#/definitions/TaskPriorityValue"
+          },
+          "dueOn" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2016-08-29T09:12:33.001Z"
+          },
+          "isAtRisk" : {
+            "type" : "boolean",
+            "example" : false
+          },
+          "assignedTo" : {
+            "type" : "string",
+            "example" : "user1"
+          },
+          "activityName" : {
+            "type" : "string",
+            "example" : "My Task"
+          },
+          "instanceId" : {
+            "type" : "string",
+            "format" : "int32",
+            "example" : 12123
+          },
+          "instanceName" : {
+            "type" : "string",
+            "example" : "My Process:1"
+          }
         }
-      }
+      } ]
     },
-    "InventoryItem" : {
-      "type" : "object",
-      "required" : [ "id", "name", "manufacturer", "releaseDate" ],
-      "properties" : {
-        "id" : {
-          "type" : "string",
-          "format" : "uuid",
-          "example" : "d290f1ee-6c54-4b01-90e6-d701748f0851"
-        },
-        "name" : {
-          "type" : "string",
-          "example" : "Widget Adapter"
-        },
-        "releaseDate" : {
-          "type" : "string",
-          "format" : "int32",
-          "example" : "2016-08-29T09:12:33.001Z"
-        },
-        "manufacturer" : {
-          "$ref" : "#/definitions/Manufacturer"
+    "TaskDetail" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/BaseResponse"
+      }, {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "format" : "int32",
+            "example" : 76503
+          },
+          "state" : {
+            "$ref" : "#/definitions/TaskState"
+          },
+          "taskStatus" : {
+            "type" : "string",
+            "example" : "Received"
+          },
+          "subject" : {
+            "type" : "string",
+            "example" : "My Task"
+          },
+          "description" : {
+            "type" : "string",
+            "example" : "My Description"
+          },
+          "priority" : {
+            "$ref" : "#/definitions/TaskPriorityValue"
+          },
+          "priorityDescription" : {
+            "$ref" : "#/definitions/TaskPriorityDescription"
+          },
+          "assignedTo" : {
+            "type" : "string",
+            "example" : "user1"
+          },
+          "assignedToDescription" : {
+            "type" : "string",
+            "example" : "User 1"
+          },
+          "assignedToType" : {
+            "type" : "string",
+            "example" : "user",
+            "enum" : [ "user", "group" ]
+          },
+          "originator" : {
+            "type" : "string",
+            "example" : "bpmadmin"
+          },
+          "activityName" : {
+            "type" : "string",
+            "example" : "My Task"
+          },
+          "activityDescription" : {
+            "type" : "string",
+            "example" : "My Description"
+          },
+          "instanceId" : {
+            "type" : "string",
+            "format" : "int32",
+            "example" : 12123
+          },
+          "instanceName" : {
+            "type" : "string",
+            "example" : "My Process:1"
+          },
+          "dueOn" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2016-08-29T09:12:33.001Z"
+          },
+          "lastModifiedOn" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2016-08-29T09:12:33.001Z"
+          },
+          "startedOn" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2016-08-29T09:12:33.001Z"
+          },
+          "completedOn" : {
+            "type" : "string",
+            "format" : "date-time",
+            "example" : "2016-08-29T09:12:33.001Z"
+          },
+          "implementingServiceId" : {
+            "type" : "string",
+            "format" : "uuid",
+            "example" : "7b6eb16f-68a2-475c-8166-8e83cc7e3b08"
+          },
+          "implementingServiceSnapshot" : {
+            "type" : "string",
+            "format" : "uuid",
+            "example" : "065598e5-e9e2-4138-8b2f-1125debe7f2b"
+          },
+          "data" : {
+            "type" : "object"
+          },
+          "processData" : {
+            "type" : "object"
+          }
         }
-      }
-    },
-    "Manufacturer" : {
-      "required" : [ "name" ],
-      "properties" : {
-        "name" : {
-          "type" : "string",
-          "example" : "ACME Corporation"
-        },
-        "homePage" : {
-          "type" : "string",
-          "format" : "url",
-          "example" : "https://www.acme-corp.com"
-        },
-        "phone" : {
-          "type" : "string",
-          "example" : "408-867-5309"
-        }
-      }
+      } ]
     }
   },
   "host" : "virtserver.swaggerhub.com",
